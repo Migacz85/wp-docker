@@ -21,8 +21,12 @@ done
 read -p "Enter the name of your Docker stack: " STACK_NAME
 STACK_ENV_FILE=".env-${STACK_NAME}"
 
-# Check if the environment file exists
-if [[ ! -f "$STACK_ENV_FILE" ]]; then
+# Load environment variables from the stack file
+if [[ -f "$STACK_ENV_FILE" ]]; then
+  # shellcheck source=/dev/null
+  source "$STACK_ENV_FILE"
+else
+  # Check if the environment file exists
   echo "❌ Error: Environment file '$STACK_ENV_FILE' not found."
   echo "   You must reuse the original env file from the first deployment."
   exit 1
