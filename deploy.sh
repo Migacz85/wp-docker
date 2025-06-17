@@ -3,15 +3,20 @@ set -euo pipefail
 
 # Parse command line arguments
 SHOW_LOGS=false
-for arg in "$@"
-do
-    case $arg in
+DOMAIN="localhost"  # Default value
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
         --logs)
         SHOW_LOGS=true
         shift
         ;;
+        --domain)
+        DOMAIN="$2"
+        shift 2
+        ;;
         *)
-        echo "Unknown argument: $arg"
+        echo "Unknown argument: $1"
         exit 1
         ;;
     esac
@@ -23,10 +28,8 @@ STACK_ENV_FILE=".env-${STACK_NAME}"
 
 # 1) Generate passwords, ports and certificates
 export MYSQL_DATABASE="exampledb"
-# Set domain for local development
-export DOMAIN="localhost"
-# Production domain for reference
-export PROD_DOMAIN="portainer-eu.matrix-test.com"
+# Export domain for use in compose files
+export DOMAIN
 
 # Create cert directory if not exists
 mkdir -p cert
