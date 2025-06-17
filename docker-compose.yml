@@ -17,6 +17,8 @@ services:
       - ./wp-content/plugins:/var/www/html/wp-content/themes/plugins
       - ./wp-content/themes:/var/www/html/wp-content/themes/
       - ./wp-content/uploads:/var/www/html/wp-content/uploads
+      - ./post-install.sh:/post-install.sh
+
 
       # - ./data:/var/www/html
       
