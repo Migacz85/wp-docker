@@ -27,6 +27,12 @@ if ! wp plugin is-installed akismet; then
     wp plugin install akismet --activate
 fi
 
+# Install and activate Twenty Twenty-Four theme
+if ! wp theme is-installed twentytwentyfour; then
+    echo "Installing Twenty Twenty-Four theme..."
+    wp theme install twentytwentyfour --activate
+fi
+
 # Set proper permissions
 chown -R www-data:www-data /var/www/html/wp-content
 
