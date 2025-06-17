@@ -1,8 +1,6 @@
-Generated and configured by Marcin
+# 🚀 WordPress Docker Stack with SSL and phpMyAdmin
 
-# 🚀 WordPress Docker Stack on Digital Ocean– Quick Start Guide
-
-This project automates the deployment of a WordPress website using Docker with SSL, phpMyAdmin, and persistent volumes.
+This project automates the deployment of a WordPress website using Docker with self-signed SSL, phpMyAdmin, and persistent volumes.
 
 ---
 
@@ -10,18 +8,24 @@ This project automates the deployment of a WordPress website using Docker with S
 
 Run the deploy script:
 
-./deploy.sh
+```bash
+./deploy.sh [--domain yourdomain.com] [--logs]
+```
 
-- Enter a name for your stack when prompted.
-- It will:
-  - Create `.env-[stackname]` with unique credentials and ports.
-  - Launch WordPress, MySQL, and phpMyAdmin using Docker Compose.
+- Enter a name for your stack when prompted
+- Optional flags:
+  - `--domain`: Set custom domain (default: localhost)
+  - `--logs`: Show container logs after deployment
 
-After it's done, it will print URLs and passwords to access:
+The script will:
+1. Generate self-signed SSL certificates
+2. Create `.env-[stackname]` with unique credentials and ports
+3. Launch WordPress, MySQL, and phpMyAdmin using Docker Compose
 
-- WordPress
-- WordPress (HTTPS)
+After deployment, it will print URLs and passwords to access:
+- WordPress (HTTP & HTTPS)
 - phpMyAdmin
+- Database credentials
 
 ---
 
@@ -29,24 +33,25 @@ After it's done, it will print URLs and passwords to access:
 
 Run:
 
-./redeploy.sh
+```bash
+./re-deploy.sh [--logs]
+```
 
-- Enter your stack name.
+- Enter your stack name
 - This will:
-  - Delete only WordPress core files (`wp-admin`, `wp-includes`, `.php` files).
-  - Keep your uploads, plugins, themes, and database.
-  - Rebuild WordPress container cleanly.
+  - Reuse existing environment variables and volumes
+  - Pull updated images if available
+  - Restart containers with existing data
 
 ---
 
-## 🔐 What Gets Saved
+## 🔐 Persistent Data
 
-Persistent between restarts:
-
-- ✅ Plugins (inside `./data/wp-content/plugins`)
-- ✅ Themes (inside `./data/wp-content/themes`)
-- ✅ Uploads (inside `./data/wp-content/uploads`)
-- ✅ MySQL database (inside Docker volume `db`)
+The following data is preserved between restarts:
+- ✅ Plugins (inside `./wp-content/plugins`)
+- ✅ Themes (inside `./wp-content/themes`)
+- ✅ Uploads (inside `./wp-content/uploads`)
+- ✅ MySQL database (inside `./db` directory)
 
 ---
 
@@ -54,37 +59,65 @@ Persistent between restarts:
 
 To remove all containers, volumes, and files:
 
+```bash
 docker compose --env-file .env-[your-stack-name] down -v
-rm -rf data/ .env-[your-stack-name]
+rm -rf db/ .env-[your-stack-name]
+```
 
 ---
 
 ## 📁 Project Structure
 
+```
 .
 ├── deploy.sh          # First-time deployment
-├── redeploy.sh        # Core-only redeploy (preserve content)
-├── docker-compose.yml # Docker stack definition
-├── data/              # Mounted WordPress data (plugins, themes, uploads)
+├── re-deploy.sh       # Core-only redeploy (preserve content)
+├── docker-compose.yml # Main Docker stack definition
+├── docker-compose.override.yml # SSL and URL configuration
+├── cert/              # Self-signed SSL certificates
+├── wp-content/        # WordPress content directory
+│   ├── plugins/       # WordPress plugins
+│   ├── themes/        # WordPress themes
+│   └── uploads/       # Media uploads
+├── db/                # MySQL database files
 └── .env-[stackname]   # Auto-generated env file
+```
+
+---
+
+## ⚙️ Configuration
+
+### SSL Certificates
+- Self-signed certificates are automatically generated in `./cert/`
+- You can replace these with your own certificates by:
+  1. Place certificate in `./cert/localhost.pem`
+  2. Place private key in `./cert/localhost-key.pem`
+
+### WordPress URLs
+Configured in `docker-compose.override.yml`:
+- `WORDPRESS_SITEURL`
+- `WORDPRESS_HOME`
+
+---
+
+## 💬 Example Deployment
+
+```bash
+# First deployment
+./deploy.sh --domain mysite.local --logs
+# Enter stack name: mystack
+
+# Redeploy
+./re-deploy.sh --logs
+# Enter stack name: mystack
+```
 
 ---
 
 ## 📝 Notes
 
-- SSL certs must exist at:
-  - `/etc/letsencrypt/live/portainer-eu.matrix-test.com/fullchain.pem`
-  - `/etc/letsencrypt/live/portainer-eu.matrix-test.com/privkey.pem`
-- Ports and passwords are randomized on first deploy.
-
----
-
-## 💬 Example
-
-./deploy.sh
-# Enter stack name: mystack
-
-./redeploy.sh
-# Enter stack name: mystack
+- Ports and passwords are randomized on first deploy
+- WordPress version: 6.8.0 with PHP 8.2
+- MySQL version: 8.0
 
 
