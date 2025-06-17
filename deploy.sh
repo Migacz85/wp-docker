@@ -2,7 +2,6 @@
 set -euo pipefail
 
 # Parse command line arguments
-SHOW_LOGS=false
 DOMAIN="localhost"  # Default value
 
 while [[ $# -gt 0 ]]; do
@@ -110,7 +109,7 @@ docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" up -d --force-recre
 
     echo -e "\n📜 Showing logs (press Ctrl+C to exit)..."
     echo "------------------------------------------------------"
-    timeout 30 docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" logs -f || true
+    docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" logs -f 
 
 echo -e "\n✅ Deployment complete!"
 echo "You can view logs anytime with:"

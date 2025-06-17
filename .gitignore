@@ -1,0 +1,46 @@
+# Ignore Docker volumes
+db/
+data/
+uploads/
+certc/
+
+# Ignore environment config
+.env*
+!.env.example
+
+# Ignore SSL certs
+/etc/letsencrypt/
+/ssl/
+*.pem
+*.crt
+*.key
+
+# Ignore OS/filesystem cruft
+.DS_Store
+Thumbs.db
+
+# Node/npm artifacts (if applicable)
+node_modules/
+npm-debug.log*
+
+# Composer artifacts (if used in plugins/themes)
+vendor/
+composer.lock
+
+# PHPStorm / VSCode / IDEs
+.idea/
+.vscode/
+
+# Ignore WordPress core (optional, if not using Git-submodule)
+wordpress/
+
+# WP CLI caches
+wp-cli.local.yml
+wp-cli.yml
+wp-cli.phar
+.cache/
+
+# Logs
+*.log
+
+.aider*
