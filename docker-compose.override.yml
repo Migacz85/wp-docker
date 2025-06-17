@@ -1,8 +1,12 @@
-# docker-compose.override.yml (local-only config)
+version: '3.8'
+
 services:
   wordpress:
     volumes:
       - ./data:/var/www/html
       - ./cert/localhost.pem:/etc/ssl/certs/portainer.crt
       - ./cert/localhost-key.pem:/etc/ssl/private/portainer.key
+    environment:
+      WORDPRESS_SITEURL: "https://${DOMAIN}:${WP_HTTPS_PORT}"
+      WORDPRESS_HOME: "https://${DOMAIN}:${WP_HTTPS_PORT}"
 

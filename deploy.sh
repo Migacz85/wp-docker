@@ -5,8 +5,21 @@ set -euo pipefail
 read -p "Enter a name for your Docker stack: " STACK_NAME
 STACK_ENV_FILE=".env-${STACK_NAME}"
 
-# 1) Generate passwords & ports
+# 1) Generate passwords, ports and certificates
 export MYSQL_DATABASE="exampledb"
+export DOMAIN="localhost"
+
+# Create cert directory if not exists
+mkdir -p cert
+
+# Generate self-signed cert if not exists
+if [ ! -f "cert/localhost.pem" ]; then
+  echo "🔐 Generating self-signed SSL certificate for ${DOMAIN}"
+  openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -keyout cert/localhost-key.pem \
+    -out cert/localhost.pem \
+    -subj "/CN=${DOMAIN}"
+fi
 export MYSQL_USER="exampleuser"
 export WORDPRESS_DB_USER="${MYSQL_USER}"  # Make WordPress user same as MySQL user
 
@@ -50,7 +63,7 @@ echo "✅ Generated .env file: $STACK_ENV_FILE"
 echo "📦 Deploying stack: $STACK_NAME"
 echo "------------------------------------------------------"
 echo "  WordPress     → http://portainer-eu.matrix-test.com:${WP_HTTP_PORT}"
-echo "  WordPress SSL → https://portainer-eu.matrix-test.com:${WP_HTTPS_PORT}"
+echo "  WordPress SSL → https://localhost:${WP_HTTPS_PORT}"
 echo "  phpMyAdmin    → http://portainer-eu.matrix-test.com:${PHPMYADMIN_PORT}"
 echo "------------------------------------------------------"
 echo "  MYSQL_USER    → ${MYSQL_USER}"
