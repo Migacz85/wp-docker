@@ -105,15 +105,9 @@ docker compose -p "$STACK_NAME" down
 # 4) Deploy the stack with unique project name
 docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" up -d --force-recreate
 
-# 5) Show logs if --logs flag was set
-if [ "$SHOW_LOGS" = true ]; then
-    echo -e "\n🔄 Waiting 5 seconds for containers to start..."
-    sleep 5
-
     echo -e "\n📜 Showing logs (press Ctrl+C to exit)..."
     echo "------------------------------------------------------"
     timeout 30 docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" logs -f || true
-fi
 
 echo -e "\n✅ Deployment complete!"
 echo "You can view logs anytime with:"
