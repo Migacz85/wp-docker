@@ -1,0 +1,8 @@
+# docker-compose.override.yml (local-only config)
+services:
+  wordpress:
+    volumes:
+      - ./data:/var/www/html
+      - ./cert/localhost.pem:/etc/ssl/certs/portainer.crt
+      - ./cert/localhost-key.pem:/etc/ssl/private/portainer.key
+
