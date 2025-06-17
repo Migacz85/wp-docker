@@ -15,7 +15,7 @@ ARG DOMAIN=localhost
 # Enable SSL and configure Apache
 RUN a2enmod ssl && \
     echo '<VirtualHost *:443>
-        ServerName '"${DOMAIN}"'
+        ServerName '"$DOMAIN"'
         DocumentRoot /var/www/html
         SSLEngine on
         SSLCertificateFile /etc/ssl/certs/portainer.crt
