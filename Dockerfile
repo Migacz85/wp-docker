@@ -9,10 +9,13 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 COPY post-install.sh /usr/local/bin/post-install.sh
 RUN chmod +x /usr/local/bin/post-install.sh
 
+# Add build argument for domain
+ARG DOMAIN=localhost
+
 # Enable SSL and configure Apache
 RUN a2enmod ssl && \
     echo '<VirtualHost *:443>
-        ServerName ${DOMAIN}
+        ServerName '"${DOMAIN}"'
         DocumentRoot /var/www/html
         SSLEngine on
         SSLCertificateFile /etc/ssl/certs/portainer.crt
