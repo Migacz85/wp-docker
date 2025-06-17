@@ -7,7 +7,10 @@ STACK_ENV_FILE=".env-${STACK_NAME}"
 
 # 1) Generate passwords, ports and certificates
 export MYSQL_DATABASE="exampledb"
+# Set domain for local development
 export DOMAIN="localhost"
+# Production domain for reference
+export PROD_DOMAIN="portainer-eu.matrix-test.com"
 
 # Create cert directory if not exists
 mkdir -p cert
@@ -62,9 +65,9 @@ echo
 echo "✅ Generated .env file: $STACK_ENV_FILE"
 echo "📦 Deploying stack: $STACK_NAME"
 echo "------------------------------------------------------"
-echo "  WordPress     → http://portainer-eu.matrix-test.com:${WP_HTTP_PORT}"
-echo "  WordPress SSL → https://localhost:${WP_HTTPS_PORT}"
-echo "  phpMyAdmin    → http://portainer-eu.matrix-test.com:${PHPMYADMIN_PORT}"
+echo "  WordPress     → http://${DOMAIN}:${WP_HTTP_PORT} (http://${PROD_DOMAIN}:${WP_HTTP_PORT})"
+echo "  WordPress SSL → https://${DOMAIN}:${WP_HTTPS_PORT} (https://${PROD_DOMAIN}:${WP_HTTPS_PORT})"
+echo "  phpMyAdmin    → http://${DOMAIN}:${PHPMYADMIN_PORT} (http://${PROD_DOMAIN}:${PHPMYADMIN_PORT})"
 echo "------------------------------------------------------"
 echo "  MYSQL_USER    → ${MYSQL_USER}"
 echo "  MYSQL_PASS    → ${MYSQL_PASSWORD}"
