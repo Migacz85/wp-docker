@@ -53,7 +53,7 @@ sleep 10
 
 # Run post-install script
 echo "🏗️ Running post-install script..."
-docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" exec wordpress /usr/local/bin/post-install.sh
+docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" exec -w /var/www/html wordpress bash wp-content/post-install.sh
 
 echo -e "\n📜 Showing logs (press Ctrl+C to exit)..."
 echo "------------------------------------------------------"
