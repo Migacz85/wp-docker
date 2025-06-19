@@ -110,7 +110,8 @@ docker compose -p "$STACK_NAME" down
 # 4) Deploy the stack with unique project name
 docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" up -d --force-recreate
 
-docker exec test1-wordpress-1 /var/www/html/wp-content/post-install.sh
+# Execute post-install script inside the WordPress container
+docker exec -w /var/www/html test-wordpress-1 bash wp-content/post-install.sh
 
     echo -e "\n📜 Showing logs (press Ctrl+C to exit)..."
     echo "------------------------------------------------------"
