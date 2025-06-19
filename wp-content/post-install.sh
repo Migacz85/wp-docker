@@ -3,6 +3,9 @@ set -e
 
 echo "🚀 Running WordPress post-installation script..."
 
+# Change to WordPress directory
+cd /var/www/html
+
 # Install WP-CLI if not present
 if ! command -v wp &> /dev/null; then
     echo "📦 Installing WP-CLI..."
