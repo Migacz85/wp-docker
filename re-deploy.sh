@@ -19,7 +19,7 @@ done
 
 # Prompt for stack name
 read -p "Enter the name of your Docker stack: " STACK_NAME
-STACK_ENV_FILE=".env-${STACK_NAME}"
+STACK_ENV_FILE=".env"
 
 # Load environment variables from the stack file
 if [[ -f "$STACK_ENV_FILE" ]]; then
