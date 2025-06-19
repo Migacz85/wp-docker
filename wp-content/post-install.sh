@@ -50,13 +50,36 @@ fi
 echo "🎨 Setting up theme..."
 wp theme install twentytwentyfour --activate --allow-root
 
+# Install and configure plugins
+echo "📦 Installing and configuring plugins..."
+wp plugin install --activate --allow-root \
+    wordfence \
+    updraftplus \
+    duplicate-post \
+    wp-mail-smtp
+
+# Set up permalinks
+echo "🔗 Setting up permalinks..."
+wp rewrite structure '/%postname%/' --allow-root
+wp rewrite flush --allow-root
+
+# Set timezone to Dublin
+echo "⏰ Setting timezone to Dublin..."
+wp option update timezone_string "Europe/Dublin" --allow-root
+
+# Disable comments
+echo "🚫 Disabling comments..."
+wp option update default_comment_status closed --allow-root
+wp option update default_ping_status closed --allow-root
+wp option update default_pingback_flag closed --allow-root
+
 # Print credentials
 echo -e "\n🔑 WordPress Admin Credentials:"
 echo "----------------------------------"
 echo "URL: https://${DOMAIN}:${WP_HTTPS_PORT}/wp-admin"
 echo "HTTP URL: http://${DOMAIN}:${WP_HTTP_PORT}/wp-admin"
-echo "Username: admin
-echo "Password: changeme 
+echo "Username: admin"
+echo "Password: changeme"
 echo "----------------------------------"
 
 echo "✅ Post-installation complete!"
