@@ -1,14 +1,5 @@
 FROM wordpress:6.8.0-php8.2
 
-# Install WP-CLI
-RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
-    chmod +x wp-cli.phar && \
-    mv wp-cli.phar /usr/local/bin/wp
-
-# Copy post-install script
-COPY wp-content/post-install.sh /usr/local/bin/post-install.sh
-RUN chmod +x /var/www/html/wp-content/post-install.sh
-
 # Add build argument for domain
 ARG DOMAIN=localhost
 
