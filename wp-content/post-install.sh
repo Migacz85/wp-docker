@@ -57,7 +57,23 @@ wp plugin install --activate --allow-root \
     updraftplus \
     wp-mail-smtp
 
-wp option update wordfence_options "{\"key\":\"$WORDFENCE_KEY\"}" --format=json --allow-root
+# Configure Wordfence
+echo "🛡️ Configuring Wordfence..."
+if [ -n "$WORDFENCE_KEY" ]; then
+    wp option update wordfence_options "{\"key\":\"$WORDFENCE_KEY\"}" --format=json --allow-root
+    
+    # Set proper permissions for Wordfence
+    WF_DIR="/var/www/html/wp-content/wflogs"
+    mkdir -p "$WF_DIR"
+    chown -R www-data:www-data "$WF_DIR"
+    chmod -R 775 "$WF_DIR"
+    
+    # Rebuild WAF config
+    wp eval 'wordfence::install();' --allow-root
+    wp eval 'wordfence::startScan();' --allow-root
+else
+    echo "⚠️ Warning: WORDFENCE_KEY not set, skipping Wordfence configuration"
+fi
 
 # Set up permalinks
 echo "🔗 Setting up permalinks..."
