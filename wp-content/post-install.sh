@@ -3,16 +3,14 @@ set -e
 
 echo "🚀 Running WordPress post-installation script..."
 
+# Wait for WordPress files to be ready
+while [ ! -f /var/www/html/wp-config.php ]; do
+    echo "⏳ Waiting for WordPress files to be ready..."
+    sleep 2
+done
+
 # Change to WordPress directory
 cd /var/www/html
-
-# Install WP-CLI if not present
-if ! command -v wp &> /dev/null; then
-    echo "📦 Installing WP-CLI..."
-    curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-    chmod +x wp-cli.phar
-    mv wp-cli.phar /usr/local/bin/wp
-fi
 
 # Check if WordPress is already installed
 if ! wp core is-installed --allow-root; then
