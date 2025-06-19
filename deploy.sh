@@ -53,8 +53,6 @@ export PMA_ROOT_PASSWORD="$(openssl rand -hex 16)"
 export WP_HTTP_PORT="$(shuf -i 20000-25000 -n1)"
 export WP_HTTPS_PORT="$(shuf -i 25001-30000 -n1)"
 export PHPMYADMIN_PORT="$(shuf -i 30001-35000 -n1)"
-export WORDFENCE_KEY='08dd69094332f19d3922d898fd17ed25c9d69d23ae7a75d937849bda9b4942b55f66ce37e1a917735c83b5c33bb325c9d28707710c2fd53c0908150933e01492' #insecure
-source .secrets.sh
 
 # 2) Write to named .env file
 cat > "$STACK_ENV_FILE" <<EOF

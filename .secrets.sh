@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+export WORDFENCE_KEY='08dd69094332f19d3922d898fd17ed25c9d69d23ae7a75d937849bda9b4942b55f66ce37e1a917735c83b5c33bb325c9d28707710c2fd53c0908150933e01492'
+
+

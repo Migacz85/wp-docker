@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+WORDFENCE_KEY='08dd69094332f19d3922d898fd17ed25c9d69d23ae7a75d937849bda9b4942b55f66ce37e1a917735c83b5c33bb325c9d28707710c2fd53c0908150933e01492' #insecure
 
 echo "🚀 Running WordPress post-installation script..."
 
@@ -21,11 +22,25 @@ if ! command -v wp &> /dev/null; then
     wp --info --allow-root
 fi
 
-# Wait for WordPress files to be ready
-while [ ! -f /var/www/html/wp-config.php ]; do
-    echo "⏳ Waiting for WordPress files to be ready..."
-    sleep 30
+
+CONFIG_PATH="/var/www/html/wp-config.php"
+MAX_WAIT=300   # total time to wait in seconds
+SLEEP_INTERVAL=5
+TIME_WAITED=0
+
+echo "⏳ Waiting for WordPress to generate wp-config.php..."
+
+while [ ! -f "$CONFIG_PATH" ]; do
+    if [ "$TIME_WAITED" -ge "$MAX_WAIT" ]; then
+        echo "❌ Timeout reached: wp-config.php not found after $MAX_WAIT seconds."
+        exit 1
+    fi
+    echo "⏳ Still waiting... (${TIME_WAITED}s elapsed)"
+    sleep "$SLEEP_INTERVAL"
+    TIME_WAITED=$((TIME_WAITED + SLEEP_INTERVAL))
 done
+
+echo "✅ wp-config.php found at $CONFIG_PATH — continuing."
 
 # Change to WordPress directory
 cd /var/www/html
@@ -42,7 +57,7 @@ if ! wp core is-installed --allow-root; then
         --url="https://${DOMAIN}:${WP_HTTPS_PORT}" \
         --title="My Matrix WordPress Site" \
         --admin_user="admin" \
-        --admin_password="changeme" \
+        --admin_password="matrix" \
         --admin_email="marcin@matrixinternet.com"
 fi
 
@@ -57,17 +72,27 @@ wp plugin install --activate --allow-root \
     updraftplus \
     wp-mail-smtp
 
+chown -R www-data:www-data "$PLUGINS_DIR"
+chmod -R 775 "$PLUGINS_DIR"
+chown -R www-data:migacz wp-content
+
 # Configure Wordfence
 echo "🛡️ Configuring Wordfence..."
-if [ -n "$WORDFENCE_KEY" ]; then
-    wp option update wordfence_options "{\"key\":\"$WORDFENCE_KEY\"}" --format=json --allow-root
+
+	wp plugin install wordfence --activate --allow-root
+
+wp eval '
+$opts = get_option("wordfence_options", []);
+$opts["key"] = "08dd69094332f19d3922d898fd17ed25c9d69d23ae7a75d937849bda9b4942b55f66ce37e1a917735c83b5c33bb325c9d28707710c2fd53c0908150933e01492";
+$opts["alertEmails"] = "migacz85@gmail.com";
+update_option("wordfence_options", $opts);
+' --allow-root
+
     
     # Set proper permissions for plugins and Wordfence
     PLUGINS_DIR="/var/www/html/wp-content/plugins"
     WF_DIR="/var/www/html/wp-content/wflogs"
 
-    chown -R www-data:www-data "$PLUGINS_DIR"
-    chmod -R 775 "$PLUGINS_DIR"
 
     mkdir -p "$WF_DIR"
     chown -R www-data:www-data "$WF_DIR"
@@ -76,9 +101,6 @@ if [ -n "$WORDFENCE_KEY" ]; then
     # Rebuild WAF config
     wp eval 'wordfence::install();' --allow-root
     wp eval 'wordfence::startScan();' --allow-root
-else
-    echo "⚠️ Warning: WORDFENCE_KEY not set, skipping Wordfence configuration"
-fi
 
 # Set up permalinks
 echo "🔗 Setting up permalinks..."

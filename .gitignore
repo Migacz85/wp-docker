@@ -33,6 +33,7 @@ composer.lock
 
 # Ignore WordPress core (optional, if not using Git-submodule)
 wordpress/
+wp-content/plugins/
 
 # WP CLI caches
 wp-cli.local.yml
