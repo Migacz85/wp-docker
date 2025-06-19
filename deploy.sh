@@ -1,8 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Parse command line arguments
-DOMAIN="localhost"  # Default value
+# Set your production  
+DOMAIN="portainer-eu.matrix-test.com"
+HOST_IP="164.92.217.201"
+
+if [ "$HOST_IP" == "164.92.217.201" ]; then
+  DOMAIN="portainer-eu.matrix-test.com"
+  mv docker-compose.override.yml .docker-compose.override.yml
+else
+  DOMAIN="localhost"  # Default value
+fi
+
+echo "Using domain: $DOMAIN"
 
 while [[ $# -gt 0 ]]; do
     case $1 in
