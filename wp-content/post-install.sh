@@ -12,6 +12,15 @@ else
     source /etc/apache2/envvars
 fi
 
+# Check if wp-cli is installed
+if ! command -v wp &> /dev/null; then
+    echo "🔧 Installing WP-CLI..."
+    curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+    chmod +x wp-cli.phar
+    mv wp-cli.phar /usr/local/bin/wp
+    wp --info --allow-root
+fi
+
 # Wait for WordPress files to be ready
 while [ ! -f /var/www/html/wp-config.php ]; do
     echo "⏳ Waiting for WordPress files to be ready..."
