@@ -15,7 +15,7 @@ fi
 # Wait for WordPress files to be ready
 while [ ! -f /var/www/html/wp-config.php ]; do
     echo "⏳ Waiting for WordPress files to be ready..."
-    sleep 15
+    sleep 30
 done
 
 # Change to WordPress directory
@@ -33,8 +33,8 @@ if ! wp core is-installed --allow-root; then
         --url="https://${DOMAIN}:${WP_HTTPS_PORT}" \
         --title="My Matrix WordPress Site" \
         --admin_user="admin" \
-        --admin_password="${MYSQL_ROOT_PASSWORD}" \
-        --admin_email="admin@${DOMAIN}"
+        --admin_password="changeme" \
+        --admin_email="marcin@matrixinternet.com"
 fi
 
 # Change theme to twentytwentyfour
@@ -46,8 +46,8 @@ echo -e "\n🔑 WordPress Admin Credentials:"
 echo "----------------------------------"
 echo "URL: https://${DOMAIN}:${WP_HTTPS_PORT}/wp-admin"
 echo "HTTP URL: http://${DOMAIN}:${WP_HTTP_PORT}/wp-admin"
-echo "Username: admin"
-echo "Password: ${MYSQL_ROOT_PASSWORD}"
+echo "Username: admin
+echo "Password: changeme 
 echo "----------------------------------"
 
 echo "✅ Post-installation complete!"
