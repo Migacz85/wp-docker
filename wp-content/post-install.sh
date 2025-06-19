@@ -55,8 +55,9 @@ echo "📦 Installing and configuring plugins..."
 wp plugin install --activate --allow-root \
     wordfence \
     updraftplus \
-    duplicate-post \
     wp-mail-smtp
+
+wp option update wordfence_options "{\"key\":\"$WORDFENCE_KEY\"}" --format=json --allow-root
 
 # Set up permalinks
 echo "🔗 Setting up permalinks..."
