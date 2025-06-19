@@ -16,7 +16,7 @@ if ! wp core is-installed --allow-root; then
     echo "🔧 Installing WordPress..."
     wp core install --allow-root \
         --url="https://${DOMAIN}:${WP_HTTPS_PORT}" \
-        --title="My WordPress Site" \
+        --title="My Matrix WordPress Site" \
         --admin_user=admin \
         --admin_password="${MYSQL_ROOT_PASSWORD}" \
         --admin_email="admin@${DOMAIN}"
