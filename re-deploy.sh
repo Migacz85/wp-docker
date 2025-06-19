@@ -47,6 +47,8 @@ docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" down
 # Start updated stack with persistent data and show logs
 docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" up -d
 
+docker exec test1-wordpress-1 /var/www/html/wp-content/post-install.sh
+
 echo -e "\n📜 Showing logs (press Ctrl+C to exit)..."
 echo "------------------------------------------------------"
 timeout 30 docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" logs -f || true
