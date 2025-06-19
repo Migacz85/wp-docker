@@ -111,7 +111,7 @@ docker compose -p "$STACK_NAME" down
 docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" up -d --force-recreate
 
 # Execute post-install script inside the WordPress container
-docker exec -w /var/www/html test-wordpress-1 bash wp-content/post-install.sh
+docker exec -w /var/www/html ${STACK_NAME}-wordpress-1 bash wp-content/post-install.sh
 
     echo -e "\n📜 Showing logs (press Ctrl+C to exit)..."
     echo "------------------------------------------------------"
