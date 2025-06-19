@@ -3,6 +3,9 @@ set -e
 
 echo "🚀 Running WordPress post-installation script..."
 
+# Load environment variables from container
+source /etc/apache2/envvars
+
 # Wait for WordPress files to be ready
 while [ ! -f /var/www/html/wp-config.php ]; do
     echo "⏳ Waiting for WordPress files to be ready..."
@@ -14,13 +17,13 @@ cd /var/www/html
 
 # Check if WordPress is already installed
 if ! wp core is-installed --allow-root; then
-	wp core install --allow-root \
-  --url="http://localhost:22188" \
-  --title="My Site" \
-  --admin_user="admin" \
-  --admin_password="yourStrongPassword" \
-  --admin_email="admin@example.com"
-
+    echo "🔧 Installing WordPress..."
+    wp core install --allow-root \
+        --url="https://${DOMAIN}:${WP_HTTPS_PORT}" \
+        --title="My Matrix WordPress Site" \
+        --admin_user="admin" \
+        --admin_password="${MYSQL_ROOT_PASSWORD}" \
+        --admin_email="admin@${DOMAIN}"
 fi
 
 # Change theme to twentytwentyfour
