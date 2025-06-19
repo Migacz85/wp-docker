@@ -24,6 +24,7 @@ done
 # Ask for a stack name
 read -p "Enter a name for your Docker stack: " STACK_NAME
 STACK_ENV_FILE=".env-${STACK_NAME}"
+#STACK_ENV_FILE=".env"
 
 # 1) Generate passwords, ports and certificates
 export MYSQL_DATABASE="exampledb"
@@ -106,6 +107,8 @@ docker compose -p "$STACK_NAME" down
 
 # 4) Deploy the stack with unique project name
 docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" up -d --force-recreate
+
+docker exec test1-wordpress-1 /var/www/html/wp-content/post-install.sh
 
     echo -e "\n📜 Showing logs (press Ctrl+C to exit)..."
     echo "------------------------------------------------------"

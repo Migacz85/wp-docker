@@ -6,8 +6,8 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
     mv wp-cli.phar /usr/local/bin/wp
 
 # Copy post-install script
-COPY post-install.sh /usr/local/bin/post-install.sh
-RUN chmod +x /usr/local/bin/post-install.sh
+COPY wp-content/post-install.sh /usr/local/bin/post-install.sh
+RUN chmod +x /var/www/html/wp-content/post-install.sh
 
 # Add build argument for domain
 ARG DOMAIN=localhost
@@ -28,4 +28,4 @@ RUN a2enmod ssl && \
     a2ensite default-ssl
 
 # Run post-install script before starting Apache
-ENTRYPOINT ["/bin/sh", "-c", "/usr/local/bin/post-install.sh && docker-entrypoint.sh apache2-foreground"]
+ENTRYPOINT ["/bin/sh", "-c", "/var/www/html/wp-content/post-install.sh && docker-entrypoint.sh apache2-foreground"]
