@@ -47,7 +47,13 @@ docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" down
 # Start updated stack with persistent data and show logs
 docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" up -d
 
-docker exec test1-wordpress-1 /var/www/html/wp-content/post-install.sh
+# Wait for WordPress to be ready
+echo "⏳ Waiting for WordPress to be ready..."
+sleep 10
+
+# Run post-install script
+echo "🏗️ Running post-install script..."
+docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" exec wordpress /usr/local/bin/post-install.sh
 
 echo -e "\n📜 Showing logs (press Ctrl+C to exit)..."
 echo "------------------------------------------------------"
