@@ -62,8 +62,13 @@ echo "🛡️ Configuring Wordfence..."
 if [ -n "$WORDFENCE_KEY" ]; then
     wp option update wordfence_options "{\"key\":\"$WORDFENCE_KEY\"}" --format=json --allow-root
     
-    # Set proper permissions for Wordfence
+    # Set proper permissions for plugins and Wordfence
+    PLUGINS_DIR="/var/www/html/wp-content/plugins"
     WF_DIR="/var/www/html/wp-content/wflogs"
+
+    chown -R www-data:www-data "$PLUGINS_DIR"
+    chmod -R 775 "$PLUGINS_DIR"
+
     mkdir -p "$WF_DIR"
     chown -R www-data:www-data "$WF_DIR"
     chmod -R 775 "$WF_DIR"
