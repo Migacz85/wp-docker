@@ -1,26 +1,31 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Set your production  
+
+#!/bin/bash
+
+########################
 DOMAIN="portainer-eu.matrix-test.com"
-HOST_IP="164.92.217.201"
+DOMAIN_IP="164.92.217.201" 
+########################
 
-if [ "$HOST_IP" == "164.92.217.201" ]; then
-  DOMAIN="portainer-eu.matrix-test.com"
+HOST_IP=$(hostname -I | awk '{print $1}')
+echo "Host IP: $HOST_IP"
+
+if [ "$HOST_IP" == "$DOMAIN_IP" ]; then
   if [ -f "docker-compose.override.yml" ]; then
-
     mv docker-compose.override.yml .docker-compose.override.yml
-
     echo "✅ Renamed to .docker-compose.override.yml"
+  fi
 else
-    echo "⚠️  docker-compose.override.yml not found."
-fi
-
-else
-  DOMAIN="localhost"  # Default value
+  DOMAIN="localhost"  
+  if [ -f ".docker-compose.override.yml" ]; then
+  mv .docker-compose.override.yml docker-compose.override.yml
+  fi
 fi
 
 echo "Using domain: $DOMAIN"
+
 
 while [[ $# -gt 0 ]]; do
     case $1 in
