@@ -7,7 +7,15 @@ HOST_IP="164.92.217.201"
 
 if [ "$HOST_IP" == "164.92.217.201" ]; then
   DOMAIN="portainer-eu.matrix-test.com"
-  mv docker-compose.override.yml .docker-compose.override.yml
+  if [ -f "docker-compose.override.yml" ]; then
+
+    mv docker-compose.override.yml .docker-compose.override.yml
+
+    echo "✅ Renamed to .docker-compose.override.yml"
+else
+    echo "⚠️  docker-compose.override.yml not found."
+fi
+
 else
   DOMAIN="localhost"  # Default value
 fi
