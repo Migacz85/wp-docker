@@ -1,26 +1,47 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+#######################################
+# CONFIGURATION
+#######################################
+PRODUCTION_DOMAIN="portainer-eu.matrix-test.com"
+PRODUCTION_IP="164.92.217.201"
+LOCAL_DOMAIN="localhost"
 
-#!/bin/bash
-
-########################
-DOMAIN="portainer-eu.matrix-test.com"
-DOMAIN_IP="164.92.217.201" 
-########################
-
+#######################################
+# ENVIRONMENT SETUP
+#######################################
 HOST_IP=$(hostname -I | awk '{print $1}')
 echo "Host IP: $HOST_IP"
 
-if [ "$HOST_IP" == "$DOMAIN_IP" ]; then
+# Production environment setup
+if [ "$HOST_IP" == "$PRODUCTION_IP" ]; then
+  echo "✅ Detected PRODUCTION environment"
+  DOMAIN="$PRODUCTION_DOMAIN"
   if [ -f "docker-compose.override.yml" ]; then
     mv docker-compose.override.yml .docker-compose.override.yml
-    echo "✅ Renamed to .docker-compose.override.yml"
+    echo "✅ Renamed override file for production"
   fi
+
+# Local development environment setup
 else
-  DOMAIN="localhost"  
+  echo "✅ Detected LOCAL development environment"
+  DOMAIN="$LOCAL_DOMAIN"
   if [ -f ".docker-compose.override.yml" ]; then
-  mv .docker-compose.override.yml docker-compose.override.yml
+    mv .docker-compose.override.yml docker-compose.override.yml
+    echo "✅ Restored override file for local development"
+  fi
+
+  #######################################
+  # LOCAL-ONLY CERTIFICATE SETUP
+  #######################################
+  mkdir -p cert
+  if [ ! -f "cert/localhost.pem" ]; then
+    echo "🔐 Generating LOCAL self-signed SSL certificate"
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+      -keyout cert/localhost-key.pem \
+      -out cert/localhost.pem \
+      -subj "/CN=${DOMAIN}"
   fi
 fi
 
@@ -49,30 +70,19 @@ read -p "Enter a name for your Docker stack: " STACK_NAME
 #STACK_ENV_FILE=".env-${STACK_NAME}"
 STACK_ENV_FILE=".env"
 
-# 1) Generate passwords, ports and certificates
+#######################################
+# SHARED CONFIGURATION
+#######################################
 export MYSQL_DATABASE="exampledb"
-# Export domain for use in compose files
 export DOMAIN
-
-# Create cert directory if not exists
-mkdir -p cert
-
-# Generate self-signed cert if not exists
-if [ ! -f "cert/localhost.pem" ]; then
-  echo "🔐 Generating self-signed SSL certificate for ${DOMAIN}"
-  openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-    -keyout cert/localhost-key.pem \
-    -out cert/localhost.pem \
-    -subj "/CN=${DOMAIN}"
-fi
 export MYSQL_USER="exampleuser"
-export WORDPRESS_DB_USER="${MYSQL_USER}"  # Make WordPress user same as MySQL user
+export WORDPRESS_DB_USER="${MYSQL_USER}"
 
+# Generate secure random passwords and ports
 export MYSQL_ROOT_PASSWORD="$(openssl rand -hex 16)"
 export MYSQL_PASSWORD="$(openssl rand -hex 16)"
-export WORDPRESS_DB_PASSWORD="${MYSQL_PASSWORD}"  # Use same password for WordPress DB user
+export WORDPRESS_DB_PASSWORD="${MYSQL_PASSWORD}"
 export PMA_ROOT_PASSWORD="$(openssl rand -hex 16)"
-
 export WP_HTTP_PORT="$(shuf -i 20000-25000 -n1)"
 export WP_HTTPS_PORT="$(shuf -i 25001-30000 -n1)"
 export PHPMYADMIN_PORT="$(shuf -i 30001-35000 -n1)"
