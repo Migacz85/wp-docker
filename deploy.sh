@@ -22,6 +22,13 @@ if [ "$HOST_IP" == "$PRODUCTION_IP" ]; then
     mv docker-compose.override.yml .docker-compose.override.yml
     echo "✅ Renamed override file for production"
   fi
+  
+  # Ensure .secrets.sh exists in production
+  if [ ! -f ".secrets.sh" ]; then
+    echo "🔒 Creating empty .secrets.sh for production"
+    touch .secrets.sh
+    chmod 600 .secrets.sh
+  fi
 
 # Local development environment setup
 else
