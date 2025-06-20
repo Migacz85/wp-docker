@@ -47,24 +47,6 @@ fi
 
 echo "Using domain: $DOMAIN"
 
-
-while [[ $# -gt 0 ]]; do
-    case $1 in
-        --logs)
-        SHOW_LOGS=true
-        shift
-        ;;
-        --domain)
-        DOMAIN="$2"
-        shift 2
-        ;;
-        *)
-        echo "Unknown argument: $1"
-        exit 1
-        ;;
-    esac
-done
-
 # Ask for a stack name
 read -p "Enter a name for your Docker stack: " STACK_NAME
 #STACK_ENV_FILE=".env-${STACK_NAME}"
@@ -131,12 +113,12 @@ echo "------------------------------------------------------"
 
 rm -rf db 
 rm -rf data
+
 # 3) Clean up old containers/volumes (if any)
 docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" down -v || true
 
 #  Stop and remove containers only (DO NOT remove volumes)
 docker compose -p "$STACK_NAME" down
-
 
 # 4) Deploy the stack with unique project name
 docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" up -d --force-recreate
