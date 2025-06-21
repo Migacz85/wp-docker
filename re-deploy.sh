@@ -26,8 +26,39 @@ done
 read -p "Enter the name of your Docker stack: " STACK_NAME
 STACK_ENV_FILE=".env"
 
-# Load configuration and environment variables
+# Load configuration
 source .config
+
+# List of available WordPress images
+WORDPRESS_IMAGES=(
+    "wordpress:latest"
+    "wordpress:6-php8.4"
+    "wordpress:6.8-php8.3"
+    "wordpress:6.8-php8.2"
+    "wordpress:6.8-php8.1"
+    "wordpress:6.7-php8.0"
+    "wordpress:6-php7.4"
+    "wordpress:php8.2"
+    "wordpress:php8.1"
+    "wordpress:php8.0"
+    "wordpress:php7.4"
+    "wordpress:php7.3"
+    "wordpress:php7.2"
+    "wordpress:php7.1"
+)
+
+# Interactive image selection
+echo "Available WordPress images:"
+for i in "${!WORDPRESS_IMAGES[@]}"; do
+    echo "  $((i+1)). ${WORDPRESS_IMAGES[$i]}"
+done
+
+read -p "Select WordPress image number [1-${#WORDPRESS_IMAGES[@]}]: " IMAGE_NUM
+if [[ $IMAGE_NUM -ge 1 && $IMAGE_NUM -le ${#WORDPRESS_IMAGES[@]} ]]; then
+    WORDPRESS_IMAGE="${WORDPRESS_IMAGES[$((IMAGE_NUM-1))]}"
+else
+    echo "⚠️ Invalid selection, using default: $WORDPRESS_IMAGE"
+fi
 
 # Load environment variables from the stack file
 if [[ -f "$STACK_ENV_FILE" ]]; then
