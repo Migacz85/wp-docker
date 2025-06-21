@@ -4,6 +4,7 @@ services:
       - ./data:/var/www/html
       - ./cert/localhost.pem:/etc/ssl/certs/portainer.crt
       - ./cert/localhost-key.pem:/etc/ssl/private/portainer.key
+      - ./php.ini-dev:/usr/local/etc/php/php.ini
     environment:
       WORDPRESS_SITEURL: "https://${DOMAIN}:${WP_HTTPS_PORT}"
       WORDPRESS_HOME: "https://${DOMAIN}:${WP_HTTPS_PORT}"
