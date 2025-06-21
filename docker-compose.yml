@@ -1,6 +1,6 @@
 services:
   wordpress:
-    image: wordpress:6.8.1-php8.2
+    image: wordpress:6.8.0-php8.2
     #image: wordpress:6.7-php8.1
     depends_on:
       - db
@@ -20,7 +20,7 @@ services:
       - ./wp-content/uploads:/var/www/html/wp-content/uploads
       - ./wp-content/post-install.sh:/var/www/html/wp-content/post-install.sh
       - ./.env:/var/www/html/.env
-      - ./php.ini:/usr/local/etc/php/php.ini
+      - ./php.ini-prod:/usr/local/etc/php/php.ini
       - /etc/letsencrypt/live/portainer-eu.matrix-test.com/fullchain.pem:/etc/ssl/certs/portainer.crt
       - /etc/letsencrypt/live/portainer-eu.matrix-test.com/privkey.pem:/etc/ssl/private/portainer.key
 
