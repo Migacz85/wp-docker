@@ -44,6 +44,9 @@ sleep 15
 
 echo "✅ wp-config.php found at $CONFIG_PATH — continuing."
 
+# Print WordPress core version
+WP_VERSION=$(wp core version --allow-root)
+echo "ℹ️ WordPress Core Version: $WP_VERSION"
 
 # Change to WordPress directory
 cd /var/www/html
