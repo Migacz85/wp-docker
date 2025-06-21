@@ -44,6 +44,16 @@ docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" pull
 # Gracefully stop old containers (without removing volumes!)
 docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" down
 
+# Clean install option
+if [ "$CLEAN_INSTALL" = true ]; then
+    echo "🧹 Performing clean install - removing all files except wp-content..."
+    if [ -d "./data" ]; then
+        # Remove everything except wp-content
+        find ./data -mindepth 1 -maxdepth 1 ! -name 'wp-content' -exec rm -rf {} +
+        echo "✅ Removed all files except wp-content directory"
+    fi
+fi
+
 # Start updated stack with persistent data and show logs
 docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" up -d
 
