@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+CLEAN_INSTALL=true
+
 # Parse command line arguments
 SHOW_LOGS=false
 for arg in "$@"
