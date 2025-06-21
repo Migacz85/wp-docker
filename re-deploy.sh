@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Load configuration
+source .config
+
 CLEAN_INSTALL=true
 
 # Parse command line arguments

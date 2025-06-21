@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-#######################################
-# CONFIGURATION
-#######################################
-PRODUCTION_DOMAIN="portainer-eu.matrix-test.com"
-PRODUCTION_IP="164.92.217.201"
-LOCAL_DOMAIN="localhost"
+# Load configuration
+source .config
 
 #######################################
 # ENVIRONMENT SETUP
