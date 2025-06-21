@@ -13,9 +13,16 @@ Run the deploy script:
 ```
 
 - Enter a name for your stack when prompted
+- Select a WordPress image version from the list
 - Optional flags:
   - `--domain`: Set custom domain (default: localhost)
   - `--logs`: Show container logs after deployment
+
+### Available WordPress Images
+The deployment includes support for multiple WordPress versions with different PHP versions:
+- Latest stable release
+- Specific WordPress versions (6.8, 6.7, etc.)
+- PHP 8.x and 7.x variants
 
 The script will:
 1. Generate self-signed SSL certificates
@@ -38,10 +45,12 @@ Run:
 ```
 
 - Enter your stack name
+- Select a WordPress image version from the list
 - This will:
   - Reuse existing environment variables and volumes
   - Pull updated images if available
   - Restart containers with existing data
+  - Allow switching WordPress versions while preserving content
 
 ---
 
@@ -117,7 +126,9 @@ Configured in `docker-compose.override.yml`:
 ## 📝 Notes
 
 - Ports and passwords are randomized on first deploy
-- WordPress version: 6.8.0 with PHP 8.2
-- MySQL version: 8.0
+- Default WordPress version: 6.7.0 with PHP 8.2
+- MySQL version: 10.6
+- Supports multiple WordPress and PHP versions
+- Easy version switching during redeployment
 
 
