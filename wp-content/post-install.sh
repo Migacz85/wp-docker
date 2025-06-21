@@ -40,7 +40,10 @@ while [ ! -f "$CONFIG_PATH" ]; do
     TIME_WAITED=$((TIME_WAITED + SLEEP_INTERVAL))
 done
 
+sleep 15
+
 echo "✅ wp-config.php found at $CONFIG_PATH — continuing."
+
 
 # Change to WordPress directory
 cd /var/www/html
@@ -72,9 +75,15 @@ wp plugin install --activate --allow-root \
     updraftplus \
     wp-mail-smtp
 
+chown -R www-data:www-data wp-content/wflogs
+chmod -R 755 wp-content/wflogs
+
 chown -R www-data:www-data "$PLUGINS_DIR"
 chmod -R 775 "$PLUGINS_DIR"
 chown -R www-data:migacz wp-content
+chmod -R 775 wp-content
+
+www-data:migacz wp-content
 
 # Configure Wordfence
 echo "🛡️ Configuring Wordfence..."
