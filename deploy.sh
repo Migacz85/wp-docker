@@ -59,6 +59,7 @@ done
 read -p "Select WordPress image number [1-${#WORDPRESS_IMAGES[@]}]: " IMAGE_NUM
 if [[ $IMAGE_NUM -ge 1 && $IMAGE_NUM -le ${#WORDPRESS_IMAGES[@]} ]]; then
     WORDPRESS_IMAGE="${WORDPRESS_IMAGES[$((IMAGE_NUM-1))]}"
+    echo "Using selected image: $WORDPRESS_IMAGE"
 else
     echo "⚠️ Invalid selection, using default: $WORDPRESS_IMAGE"
 fi
@@ -70,9 +71,6 @@ STACK_ENV_FILE=".env"
 #######################################
 # SHARED CONFIGURATION
 #######################################
-export MYSQL_DATABASE="exampledb"
-export DOMAIN
-export MYSQL_USER="exampleuser"
 export WORDPRESS_DB_USER="${MYSQL_USER}"
 
 # Generate secure random passwords and ports
@@ -83,6 +81,7 @@ export PMA_ROOT_PASSWORD="$(openssl rand -hex 16)"
 export WP_HTTP_PORT="$(shuf -i 20000-25000 -n1)"
 export WP_HTTPS_PORT="$(shuf -i 25001-30000 -n1)"
 export PHPMYADMIN_PORT="$(shuf -i 30001-35000 -n1)"
+export WORDPRESS_IMAGE="${WORDPRESS_IMAGE}"
 
 # 2) Write to named .env file
 cat > "$STACK_ENV_FILE" <<EOF
@@ -109,8 +108,14 @@ WP_HTTP_PORT=${WP_HTTP_PORT}
 WP_HTTPS_PORT=${WP_HTTPS_PORT}
 PHPMYADMIN_PORT=${PHPMYADMIN_PORT}
 
-# Image
-WORDPRESS_IMAGE=${WORDPRESS_IMAGE}
+# Admin credentials
+ADMIN_USER=${ADMIN_USER}
+ADMIN_PASSWORD=${ADMIN_PASSWORD}
+ADMIN_EMAIL=${ADMIN_EMAIL}
+
+# Domain
+DOMAIN=${DOMAIN}
+
 EOF
 
 echo

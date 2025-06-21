@@ -20,8 +20,8 @@ services:
       - ./wp-content/post-install.sh:/var/www/html/wp-content/post-install.sh
       - ./.env:/var/www/html/.env
       - ./php.ini-prod:/usr/local/etc/php/php.ini
-      - /etc/letsencrypt/live/portainer-eu.matrix-test.com/fullchain.pem:/etc/ssl/certs/portainer.crt
-      - /etc/letsencrypt/live/portainer-eu.matrix-test.com/privkey.pem:/etc/ssl/private/portainer.key
+      - /etc/letsencrypt/live/${DOMAIN}/fullchain.pem:/etc/ssl/certs/portainer.crt
+      - /etc/letsencrypt/live/${DOMAIN}/privkey.pem:/etc/ssl/private/portainer.key
 
       # - ./data:/var/www/html
     command: >

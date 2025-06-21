@@ -1,7 +1,5 @@
 #!/bin/bash
 set -e
-WORDFENCE_KEY='08dd69094332f19d3922d898fd17ed25c9d69d23ae7a75d937849bda9b4942b55f66ce37e1a917735c83b5c33bb325c9d28707710c2fd53c0908150933e01492' #insecure
-
 echo "🚀 Running WordPress post-installation script..."
 
 # Load environment variables from .env file
@@ -54,7 +52,7 @@ cd /var/www/html
 # Set default values if environment variables are not set
 DOMAIN=${DOMAIN:-localhost}
 WP_HTTPS_PORT=${WP_HTTPS_PORT:-443}
-MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-$(openssl rand -hex 16)}
+ADMIN_EMAIL=${ADMIN_EMAIL:-developers@matrixinternet.com}
 
 # Check if WordPress is already installed
 if ! wp core is-installed --allow-root; then
@@ -62,13 +60,29 @@ if ! wp core is-installed --allow-root; then
     wp core install --allow-root \
         --url="https://${DOMAIN}:${WP_HTTPS_PORT}" \
         --title="My Matrix WordPress Site" \
-        --admin_user="admin" \
-        --admin_password="1matrix!" \
-        --admin_email="marcin@matrixinternet.com"
+        --admin_user="$ADMIN_USER" \
+        --admin_password="$ADMIN_PASSWORD" \
+        --admin_email="$ADMIN_EMAIL"
 fi
 
+# Update password and email for ADMIN_USER
+if wp user get "$ADMIN_USER" --allow-root > /dev/null 2>&1; then
+    echo "🔑 Updating admin user password and email..."
+    wp user update "$ADMIN_USER" --user_pass="$ADMIN_PASSWORD" --user_email="$ADMIN_EMAIL" --allow-root
+fi
+
+# Print credentials
+echo -e "\n🔑 WordPress Admin Credentials:"
+echo "----------------------------------"
+echo "HTTP URL: http://${DOMAIN}:${WP_HTTP_PORT}/wp-admin"
+echo "HTTPS URL: https://${DOMAIN}:${WP_HTTPS_PORT}/wp-admin"
+echo "Username: $ADMIN_USER"
+echo "Password: $ADMIN_PASSWORD"
+echo "Admin Email: $ADMIN_EMAIL"
+echo "----------------------------------"
+
 # Change theme to twentytwentyfour
-echo "🎨 Setting up theme..."
+#echo "🎨 Setting up theme..."
 #wp theme install twentytwentyfour --activate --allow-root
 
 # Install and configure plugins
@@ -86,33 +100,23 @@ chmod -R 775 "$PLUGINS_DIR"
 chown -R www-data:migacz wp-content
 chmod -R 775 wp-content
 
-www-data:migacz wp-content
-
 # Configure Wordfence
 echo "🛡️ Configuring Wordfence..."
 
-	wp plugin install wordfence --activate --allow-root
+wp plugin install wordfence --allow-root
 
-# wp eval '
-# $opts = get_option("wordfence_options", []);
-# $opts["key"] = "08dd69094332f19d3922d898fd17ed25c9d69d23ae7a75d937849bda9b4942b55f66ce37e1a917735c83b5c33bb325c9d28707710c2fd53c0908150933e01492";
-# $opts["alertEmails"] = "migacz85@gmail.com";
-# update_option("wordfence_options", $opts);
-# ' --allow-root
-
-    
-    # Set proper permissions for plugins and Wordfence
-    PLUGINS_DIR="/var/www/html/wp-content/plugins"
-    WF_DIR="/var/www/html/wp-content/wflogs"
+# Set proper permissions for plugins and Wordfence
+PLUGINS_DIR="/var/www/html/wp-content/plugins"
+WF_DIR="/var/www/html/wp-content/wflogs"
 
 
-    mkdir -p "$WF_DIR"
-    chown -R www-data:www-data "$WF_DIR"
-    chmod -R 775 "$WF_DIR"
-    
+mkdir -p "$WF_DIR"
+chown -R www-data:www-data "$WF_DIR"
+chmod -R 775 "$WF_DIR"
+   
     # Rebuild WAF config
-    wp eval 'wordfence::install();' --allow-root
-    wp eval 'wordfence::startScan();' --allow-root
+wp eval 'wordfence::install();' --allow-root
+wp eval 'wordfence::startScan();' --allow-root
 
 # Set up permalinks
 echo "🔗 Setting up permalinks..."
@@ -129,13 +133,5 @@ wp option update default_comment_status closed --allow-root
 wp option update default_ping_status closed --allow-root
 wp option update default_pingback_flag closed --allow-root
 
-# Print credentials
-echo -e "\n🔑 WordPress Admin Credentials:"
-echo "----------------------------------"
-echo "URL: https://${DOMAIN}:${WP_HTTPS_PORT}/wp-admin"
-echo "HTTP URL: http://${DOMAIN}:${WP_HTTP_PORT}/wp-admin"
-echo "Username: admin"
-echo "Password: changeme"
-echo "----------------------------------"
 
 echo "✅ Post-installation complete!"
