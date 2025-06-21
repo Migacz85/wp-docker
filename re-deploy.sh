@@ -26,6 +26,9 @@ done
 read -p "Enter the name of your Docker stack: " STACK_NAME
 STACK_ENV_FILE=".env"
 
+# Load configuration and environment variables
+source .config
+
 # Load environment variables from the stack file
 if [[ -f "$STACK_ENV_FILE" ]]; then
   # shellcheck source=/dev/null
@@ -36,6 +39,10 @@ else
   echo "   You must reuse the original env file from the first deployment."
   exit 1
 fi
+
+# Ensure required variables are set
+export DOMAIN=${DOMAIN:-$LOCAL_DOMAIN}
+export WORDPRESS_IMAGE=${WORDPRESS_IMAGE:-"wordpress:6.8.0-php8.2"}
 
 echo
 echo "🔁 Re-deploying Docker stack: $STACK_NAME"
