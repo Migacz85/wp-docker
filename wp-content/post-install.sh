@@ -96,8 +96,8 @@ echo "----------------------------------"
 # chmod -R 755 wp-content/wflogs
 # chown -R www-data:www-data "$PLUGINS_DIR"
 # chmod -R 775 "$PLUGINS_DIR"
-# chown -R www-data:migacz wp-content
-# chmod -R 775 wp-content
+chown -R www-data:www-data wp-content
+chmod -R 775 wp-content
 
 # Set proper permissions for plugins and Wordfence
 
