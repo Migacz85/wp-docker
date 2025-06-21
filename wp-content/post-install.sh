@@ -63,13 +63,13 @@ if ! wp core is-installed --allow-root; then
         --url="https://${DOMAIN}:${WP_HTTPS_PORT}" \
         --title="My Matrix WordPress Site" \
         --admin_user="admin" \
-        --admin_password="matrix" \
+        --admin_password="1matrix!" \
         --admin_email="marcin@matrixinternet.com"
 fi
 
 # Change theme to twentytwentyfour
 echo "🎨 Setting up theme..."
-wp theme install twentytwentyfour --activate --allow-root
+#wp theme install twentytwentyfour --activate --allow-root
 
 # Install and configure plugins
 echo "📦 Installing and configuring plugins..."
@@ -93,12 +93,12 @@ echo "🛡️ Configuring Wordfence..."
 
 	wp plugin install wordfence --activate --allow-root
 
-wp eval '
-$opts = get_option("wordfence_options", []);
-$opts["key"] = "08dd69094332f19d3922d898fd17ed25c9d69d23ae7a75d937849bda9b4942b55f66ce37e1a917735c83b5c33bb325c9d28707710c2fd53c0908150933e01492";
-$opts["alertEmails"] = "migacz85@gmail.com";
-update_option("wordfence_options", $opts);
-' --allow-root
+# wp eval '
+# $opts = get_option("wordfence_options", []);
+# $opts["key"] = "08dd69094332f19d3922d898fd17ed25c9d69d23ae7a75d937849bda9b4942b55f66ce37e1a917735c83b5c33bb325c9d28707710c2fd53c0908150933e01492";
+# $opts["alertEmails"] = "migacz85@gmail.com";
+# update_option("wordfence_options", $opts);
+# ' --allow-root
 
     
     # Set proper permissions for plugins and Wordfence

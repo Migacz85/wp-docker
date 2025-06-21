@@ -6,17 +6,20 @@ This project automates the deployment of a WordPress website using Docker with s
 
 ## ✅ First-Time Setup
 
+Set Config.config 
+PRODUCTION_DOMAIN="portainer-eu.matrix-test.com"
+PRODUCTION_IP="164.92.217.201"
+LOCAL_DOMAIN="localhost"
+WORDPRESS_IMAGE="wordpress:6.7.0-php8.2"
+
 Run the deploy script:
 
 ```bash
-./deploy.sh [--domain yourdomain.com] [--logs]
+./deploy.sh 
 ```
 
 - Enter a name for your stack when prompted
 - Select a WordPress image version from the list
-- Optional flags:
-  - `--domain`: Set custom domain (default: localhost)
-  - `--logs`: Show container logs after deployment
 
 ### Available WordPress Images
 The deployment includes support for multiple WordPress versions with different PHP versions:
@@ -25,8 +28,8 @@ The deployment includes support for multiple WordPress versions with different P
 - PHP 8.x and 7.x variants
 
 The script will:
-1. Generate self-signed SSL certificates
-2. Create `.env-[stackname]` with unique credentials and ports
+1. Generate self-signed SSL certificates (On localhost )
+2. Create `.env` with unique credentials and ports
 3. Launch WordPress, MySQL, and phpMyAdmin using Docker Compose
 
 After deployment, it will print URLs and passwords to access:
@@ -41,7 +44,7 @@ After deployment, it will print URLs and passwords to access:
 Run:
 
 ```bash
-./re-deploy.sh [--logs]
+./re-deploy.sh 
 ```
 
 - Enter your stack name
@@ -79,7 +82,7 @@ rm -rf db/ .env-[your-stack-name]
 
 ```
 .
-├── deploy.sh          # First-time deployment
+├── deploy.sh          # First-time deployment (rm volumes && generate all new env vars)
 ├── re-deploy.sh       # Core-only redeploy (preserve content)
 ├── docker-compose.yml # Main Docker stack definition
 ├── docker-compose.override.yml # SSL and URL configuration
@@ -101,6 +104,13 @@ rm -rf db/ .env-[your-stack-name]
 - You can replace these with your own certificates by:
   1. Place certificate in `./cert/localhost.pem`
   2. Place private key in `./cert/localhost-key.pem`
+
+I generated them using mkcert:
+
+```bash
+mkcert 
+```
+
 
 ### WordPress URLs
 Configured in `docker-compose.override.yml`:
