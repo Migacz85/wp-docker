@@ -31,7 +31,8 @@ services:
       bash -c "apt-get update && 
       a2enmod ssl &&
       echo '<VirtualHost *:443>
-          ServerName your-domain.com
+          ServerName ${DOMAIN}
+          ServerAdmin developers@${DOMAIN} 
           DocumentRoot /var/www/html
           SSLEngine on
           SSLCertificateFile /etc/ssl/certs/portainer.crt

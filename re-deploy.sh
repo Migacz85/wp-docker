@@ -127,8 +127,8 @@ echo -e "\n🖥"
 # Wait for WordPress to be ready
 #echo "⏳ Waiting for WordPress to be ready..."
 #sleep 10
-#echo "🏗️ Running post-install script..."
-#docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" exec -w /var/www/html wordpress bash wp-content/post-install.sh
+echo "🏗️ Running post-install script..."
+docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" exec -w /var/www/html wordpress bash wp-content/post-install.sh
 
 echo -e "\n📜 Showing logs (press Ctrl+C to exit)..."
 echo "------------------------------------------------------"

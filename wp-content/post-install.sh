@@ -86,52 +86,42 @@ echo "----------------------------------"
 #wp theme install twentytwentyfour --activate --allow-root
 
 # Install and configure plugins
-echo "📦 Installing and configuring plugins..."
-wp plugin install --activate --allow-root \
-    wordfence \
-    updraftplus \
-    wp-mail-smtp
 
-chown -R www-data:www-data wp-content/wflogs
-chmod -R 755 wp-content/wflogs
-
-chown -R www-data:www-data "$PLUGINS_DIR"
-chmod -R 775 "$PLUGINS_DIR"
-chown -R www-data:migacz wp-content
-chmod -R 775 wp-content
-
-# Configure Wordfence
-echo "🛡️ Configuring Wordfence..."
-
-wp plugin install wordfence --allow-root
+# echo "📦 Installing and configuring plugins..."
+# wp plugin install --activate --allow-root \
+#     wordfence \
+#     updraftplus \
+#     wp-mail-smtp
+# chown -R www-data:www-data wp-content/wflogs
+# chmod -R 755 wp-content/wflogs
+# chown -R www-data:www-data "$PLUGINS_DIR"
+# chmod -R 775 "$PLUGINS_DIR"
+# chown -R www-data:migacz wp-content
+# chmod -R 775 wp-content
 
 # Set proper permissions for plugins and Wordfence
-PLUGINS_DIR="/var/www/html/wp-content/plugins"
-WF_DIR="/var/www/html/wp-content/wflogs"
 
-
-mkdir -p "$WF_DIR"
-chown -R www-data:www-data "$WF_DIR"
-chmod -R 775 "$WF_DIR"
+# PLUGINS_DIR="/var/www/html/wp-content/plugins"
+# WF_DIR="/var/www/html/wp-content/wflogs"
+# mkdir -p "$WF_DIR"
+# chown -R www-data:www-data "$WF_DIR"
+# chmod -R 775 "$WF_DIR"
    
-    # Rebuild WAF config
-wp eval 'wordfence::install();' --allow-root
-wp eval 'wordfence::startScan();' --allow-root
 
-# Set up permalinks
-echo "🔗 Setting up permalinks..."
-wp rewrite structure '/%postname%/' --allow-root
-wp rewrite flush --allow-root
+# # Set up permalinks
+# echo "🔗 Setting up permalinks..."
+# wp rewrite structure '/%postname%/' --allow-root
+# wp rewrite flush --allow-root
 
-# Set timezone to Dublin
-echo "⏰ Setting timezone to Dublin..."
-wp option update timezone_string "Europe/Dublin" --allow-root
+# # Set timezone to Dublin
+# echo "⏰ Setting timezone to Dublin..."
+# wp option update timezone_string "Europe/Dublin" --allow-root
 
-# Disable comments
-echo "🚫 Disabling comments..."
-wp option update default_comment_status closed --allow-root
-wp option update default_ping_status closed --allow-root
-wp option update default_pingback_flag closed --allow-root
+# # Disable comments
+# echo "🚫 Disabling comments..."
+# wp option update default_comment_status closed --allow-root
+# wp option update default_ping_status closed --allow-root
+# wp option update default_pingback_flag closed --allow-root
 
 
 echo "✅ Post-installation complete!"
