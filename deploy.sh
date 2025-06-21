@@ -82,6 +82,9 @@ export WP_HTTP_PORT="$(shuf -i 20000-25000 -n1)"
 export WP_HTTPS_PORT="$(shuf -i 25001-30000 -n1)"
 export PHPMYADMIN_PORT="$(shuf -i 30001-35000 -n1)"
 export WORDPRESS_IMAGE="${WORDPRESS_IMAGE}"
+export ADMIN_USER="${ADMIN_USER:-matrix}"
+export ADMIN_PASSWORD="$(openssl rand -base64 12)"
+export ADMIN_EMAIL="${ADMIN_EMAIL}"
 
 # 2) Write to named .env file
 cat > "$STACK_ENV_FILE" <<EOF

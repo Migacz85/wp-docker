@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
+#Scritps Runs inside the Docker container to 
+#re-deploy a WordPress stack with 
+#persistent data
+
 set -euo pipefail
 
-# Load configuration
-source .config
 
 CLEAN_INSTALL=true
 
@@ -120,17 +122,17 @@ for service in $(docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" ps
     fi
 done
 echo -e "\n🖥"
-# Wait for WordPress to be ready
-echo "⏳ Waiting for WordPress to be ready..."
-sleep 10
 
 # Run post-install script
-echo "🏗️ Running post-install script..."
-docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" exec -w /var/www/html wordpress bash wp-content/post-install.sh
+# Wait for WordPress to be ready
+#echo "⏳ Waiting for WordPress to be ready..."
+#sleep 10
+#echo "🏗️ Running post-install script..."
+#docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" exec -w /var/www/html wordpress bash wp-content/post-install.sh
 
 echo -e "\n📜 Showing logs (press Ctrl+C to exit)..."
 echo "------------------------------------------------------"
-timeout 30 docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" logs -f || true
+docker compose --env-file "$STACK_ENV_FILE" -p "$STACK_NAME" logs -f || true
 
 echo -e "\n✅ Re-deployment complete!"
 echo "You can view logs anytime with:"
