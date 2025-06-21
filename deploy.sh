@@ -52,16 +52,20 @@ echo "Using domain: $DOMAIN"
 
 # List of available WordPress images
 WORDPRESS_IMAGES=(
-    "wordpress:6.7.0-php8.2"
-    "wordpress:6.7.0-php8.1"
-    "wordpress:6.7.0-php8.0"
-    "wordpress:6.6.1-php8.2"
-    "wordpress:6.6.1-php8.1"
-    "wordpress:6.6.1-php8.0"
     "wordpress:latest"
+    "wordpress:6-php8.4"
+    "wordpress:6.8-php8.3"
+    "wordpress:6.8-php8.2"
+    "wordpress:6.8-php8.1"
+    "wordpress:6.7-php8.0"
+    "wordpress:6-php7.4"
     "wordpress:php8.2"
     "wordpress:php8.1"
     "wordpress:php8.0"
+    "wordpress:php7.4"
+    "wordpress:php7.3"
+    "wordpress:php7.2"
+    "wordpress:php7.1"
 )
 
 # Interactive image selection
